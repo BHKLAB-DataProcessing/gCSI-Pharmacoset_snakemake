@@ -1,0 +1,2 @@
+accession_id,title,description,dataset_types,technologies,num_samples,access_type,extra_attributes,is_in_beacon,is_released,released_date,is_deprecated,policy_accession_id,submission_accession_id,created_at,edited_at
+EGAD00001003550,Cell line exome sequencing,Cell line exome sequencing,"{""Exome sequencing""}","{""Illumina HiSeq 2500""}",176,controlled,,f,t,2017-11-20 01:00:00+01,f,EGAP00001000061,EGA00001358028,2017-08-04 19:43:36+02,2017-10-23 15:10:03+02

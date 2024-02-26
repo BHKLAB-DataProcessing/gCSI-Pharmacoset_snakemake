@@ -1,0 +1,24 @@
+treatmentResponse_and_Metadata:
+  RDS_files: http://research-pub.gene.com/gCSI_GRvalues2019/gCSI_GRdata_v1.3.rds.tar.gz
+  TSV_files: http://research-pub.gene.com/gCSI_GRvalues2019/gCSI_GRdata_v1.3.tsv.tar.gz
+
+molecularProfiles:
+  expression:
+    description: "RNA-seq gene expression data"
+    url: "ega://EGAD000010000725"
+    metadata:
+      url: "https://www.ebi.ac.uk/biostudies/files/E-MTAB-2706/E-MTAB-2706.sdrf.txt"
+
+
+refDir : "metadata/references"
+ref_build : "GRCh38"
+ref_version : "38"
+ref_species : "human"
+
+kallisto_version : "0.46.1"
+
+star_version: "2.7.11"
+
+featureCounts_VERSION: "2.0.6"
+
+rsem_version: "1.3.3"

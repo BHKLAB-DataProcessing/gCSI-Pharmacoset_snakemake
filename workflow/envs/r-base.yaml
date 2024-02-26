@@ -1,0 +1,14 @@
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - r-base=4.3.1
+  - r-essentials=4.3.0
+  - r-data.table=1.14.8
+  - bioconductor-tximport=1.30.0
+  - bioconductor-multiassayexperiment=1.28.0
+  - bioconductor-genomicfeatures=1.54.1
+  - bioconductor-genomicranges=1.54.1
+  - bioconductor-pharmacogx=3.6.0
+  - bioconductor-rhdf5=2.46.1

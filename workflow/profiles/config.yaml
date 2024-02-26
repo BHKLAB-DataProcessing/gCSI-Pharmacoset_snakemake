@@ -1,0 +1,54 @@
+# __default__:
+#     account: t119797uhn # your hpc account
+#     partition: all # the partition you use
+#     mail-user: jermiah.joseph@uhn.ca # your email (optional!)
+#     time: 60 # default time (minutes)
+#     nodes: 1
+#     ntasks: 1
+#     mem: 14GB # default memory
+
+jobs: 120
+cores: 320
+slurm: True
+keep-going: True
+rerun-incomplete: True
+printshellcmds: True
+
+use-envmodules: True
+show-failed-logs: True
+
+default-resources:
+    slurm_account: "bhklab"
+    slurm_partition: "himem"
+
+groups:
+    - star_align_paired=star_rsem_{sample}
+    - rsem_calculateExpression=star_rsem_{sample}
+
+set-resources:
+    - create_rse_list_RSEM:slurm_partition="veryhimem"
+    - create_rse_list_RSEM:mem_mb=100000
+    - create_rse_list_RSEM:runtime=119
+
+    - create_rse_list_SALMON_KALLISTO:slurm_partition="veryhimem"
+    - create_rse_list_SALMON_KALLISTO:mem_mb=100000
+    - create_rse_list_SALMON_KALLISTO:runtime=119
+    - create_rse_list_SALMON_KALLISTO:slurm_extra= --mail-type="FAIL" --mail-user="jermiah.joseph@uhn.ca"
+
+    - kallisto_quant:mem_mb=12000
+    - kallisto_quant:runtime=29
+    - kallisto_quant:slurm_extra= --mail-type="FAIL" --mail-user="jermiah.joseph@uhn.ca"
+
+    - salmon_quant:mem_mb=14000
+    - salmon_quant:runtime=59
+    - salmon_quant:slurm_extra= --mail-type="FAIL" --mail-user="jermiah.joseph@uhn.ca"
+
+    - star_align_paired:slurm_partition="veryhimem"
+    - star_align_paired:mem_mb=100000
+    - star_align_paired:runtime=59
+    - star_align_paired:slurm_extra= --mail-type="FAIL" --mail-user="jermiah.joseph@uhn.ca"
+    
+    - rsem_calculateExpression:slurm_partition="veryhimem"
+    - rsem_calculateExpression:mem_mb=100000
+    - rsem_calculateExpression:runtime=119
+    - rsem_calculateExpression:slurm_extra= --mail-type="FAIL" --mail-user="jermiah.joseph@uhn.ca"

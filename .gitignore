@@ -1,0 +1,9 @@
+rawdata/*
+procdata
+
+results/*
+references/*
+.snakemake/*
+sandbox/
+logs/
+.RData
