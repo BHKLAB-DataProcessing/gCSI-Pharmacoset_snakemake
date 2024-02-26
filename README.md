@@ -2,6 +2,10 @@
 #DATE: 2024-02-20
 #DESC: A pipeline to process the gCSI dataset from Genentech. At the moment it only does rnaseq data processing.
 
+# Note: 
+RNA-seq processing was done on HPC4Health cluster and uploaded to the cloud.
+
+
 # GR-based drug response dataset from Genentech
 [Link to Data Page](http://research-pub.gene.com/gCSI_GRvalues2019/)
 
