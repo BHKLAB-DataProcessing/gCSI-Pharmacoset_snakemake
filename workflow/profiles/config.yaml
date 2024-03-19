@@ -21,17 +21,14 @@ default-resources:
     slurm_account: "bhklab"
     slurm_partition: "himem"
 
-groups:
-    - star_align_paired=star_rsem_{sample}
-    - rsem_calculateExpression=star_rsem_{sample}
 
 set-resources:
     - create_rse_list_RSEM:slurm_partition="veryhimem"
-    - create_rse_list_RSEM:mem_mb=100000
+    - create_rse_list_RSEM:mem_mb=32000
     - create_rse_list_RSEM:runtime=119
 
     - create_rse_list_SALMON_KALLISTO:slurm_partition="veryhimem"
-    - create_rse_list_SALMON_KALLISTO:mem_mb=100000
+    - create_rse_list_SALMON_KALLISTO:mem_mb=32000
     - create_rse_list_SALMON_KALLISTO:runtime=119
     - create_rse_list_SALMON_KALLISTO:slurm_extra= --mail-type="FAIL" --mail-user="jermiah.joseph@uhn.ca"
 
@@ -50,5 +47,5 @@ set-resources:
     
     - rsem_calculateExpression:slurm_partition="veryhimem"
     - rsem_calculateExpression:mem_mb=100000
-    - rsem_calculateExpression:runtime=119
+    - rsem_calculateExpression:runtime=299
     - rsem_calculateExpression:slurm_extra= --mail-type="FAIL" --mail-user="jermiah.joseph@uhn.ca"

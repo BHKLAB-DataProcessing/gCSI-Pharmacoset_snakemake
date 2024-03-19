@@ -76,8 +76,10 @@ tx2gene <- AnnotationDbi::select(txdb, k, "GENEID", "TXNAME")
 GRanges <- rtracklayer::import(INPUT$annotation_file)
 
 
-# Tool should be one of "salmon", "kallisto"
+# Tool should be one of "salmon", "kallisto" or "rsem"
 tool <- WILDCARDS$TOOL
+if(is.null(tool)) tool <- snakemake@params$tool
+
 stopifnot(tool %in% c("salmon", "kallisto", "rsem"))
 
 quant_files <- INPUT$quant_files
@@ -117,11 +119,15 @@ rse_list <- lapply(names(assays), function(x){
     if(grepl("genes", x)){
         granges <-  GRanges[GRanges$gene_id %in% rownames(assay) & GRanges$type == "gene",]
         assay <- assay[rownames(assay) %in% granges$gene_id,]
+        granges <- granges[match(rownames(assay), granges$gene_id),]
     } else {
         granges <-  GRanges[GRanges$transcript_id %in% rownames(assay) & GRanges$type == "transcript",]
         assay <- assay[rownames(assay) %in% granges$transcript_id,]
+        granges <- granges[match(rownames(assay), granges$transcript_id),]
     }
+    coldata <- 
 
+    
     SummarizedExperiment::SummarizedExperiment(
         assays = list(
             expr = assay

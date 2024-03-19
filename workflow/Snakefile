@@ -37,7 +37,7 @@ rule all:
             ref_build=ref_build,
             ref_version=ref_version,
         ),
-        rsem_rse_list = expand("results/data/rnaseq/rsem_v{RSEM_VERSION}_STAR_v{STAR_VERSION}_{ref_build}.{ref_version}/rse_list.RData",
+        rsem_rse_list = expand("results/data/rnaseq/rsem-star_v{RSEM_VERSION}-v{STAR_VERSION}/{ref_build}.{ref_version}/rse_list.RData",
             RSEM_VERSION=RSEM_VERSION,
             STAR_VERSION=STAR_VERSION,
             ref_build=ref_build[0],
@@ -49,8 +49,8 @@ rule create_rse_list_RSEM:
         quant_files = lambda wc:
             expand(
                 "procdata/rnaseq/rsem_v{RSEM_VERSION}_STAR_v{STAR_VERSION}_{ref_build}.{ref_version}/{sample}/{sample}.{file}",
-                RSEM_VERSION=RSEM_VERSION,
-                STAR_VERSION=STAR_VERSION,
+                RSEM_VERSION= wc.tool_version,
+                STAR_VERSION= wc.tool2_version,
                 ref_build=wc.ref_build,
                 ref_version=wc.ref_version,
                 sample=SAMPLES,  
@@ -63,12 +63,13 @@ rule create_rse_list_RSEM:
             ref_version=wc.ref_version, 
         )
     output:
-        rse_list = "results/data/rnaseq/rsem_v{RSEM_VERSION}_STAR_v{STAR_VERSION}_{ref_build}.{ref_version}/rse_list.RData",
+        # rse_list = "results/data/rnaseq/rsem-star_v{RSEM_VERSION}-v{STAR_VERSION}/{ref_build}.{ref_version}/rse_list.RData",
+        rse_list = "results/data/rnaseq/{tool}-{tool2}_v{tool_version}-v{tool2_version}/{ref_build}.{ref_version}/rse_list.RData",
     params:
-        tool= "rsem",
+        tool = "rsem",
         tool_version = RSEM_VERSION,
     log:
-        "logs/rnaseq/rsem_ALL_quant/v{RSEM_VERSION}_STAR_v{STAR_VERSION}_{ref_build}.{ref_version}/rsem_ALL_quant.txt"
+        "logs/rnaseq/{tool}-{tool2}_v{tool_version}-v{tool2_version}/{ref_build}.{ref_version}/create_rse_list.log"
     envmodules: "R/4.2.1"
     threads: 1
     script:
@@ -247,112 +248,3 @@ rule rsem_calculateExpression:
             $(dirname {output.genes_results})/{wildcards.sample} 2>&1 | tee {log};
         """
 
-# '''
-# /cluster/projects/bhklab/Projects/gCSI_human/gCSI_PharmacoSet-Pipeline/procdata/rnaseq/star_v2.7.9a_GRCh38.45/587804/Aligned.toTranscriptome.out.bam
-# '''
-
-# """
-# STAR \
-#     --runThreadN 5 \
-#     --genomeDir /cluster/projects/bhklab/Projects/gCSI_human/gCSI_PharmacoSet-Pipeline/references/human/GRCh38_v45/STAR.v2.7.9a_index \
-#     --readFilesIn \
-#     /cluster/projects/bhklab/Projects/gCSI_human/gCSI_PharmacoSet-Pipeline/rawdata/rnaseq/fastq/586986_1_1.rnaseq.fastq.gz \
-#     /cluster/projects/bhklab/Projects/gCSI_human/gCSI_PharmacoSet-Pipeline/rawdata/rnaseq/fastq/586986_1_2.rnaseq.fastq.gz \
-#     --readFilesCommand gunzip -c \
-#     --outFileNamePrefix procdata/ \
-#     --outSAMtype BAM SortedByCoordinate \
-#     --outSAMunmapped Within \
-#     --outFilterMultimapNmax 1 \
-#     --outFilterMismatchNmax 3 \
-#     --outFilterMismatchNoverLmax 0.3 \
-#     --quantMode TranscriptomeSAM \
-#     --sjdbOverhang 100 \
-#     --alignIntronMax 500000 \
-#     --alignMatesGapMax 500000 \
-#     > {log} 2>&1
-
-# """
-
-# rule preprocessMetadata:
-#     input:
-#         GRValues="rawdata/TreatmentResponse_and_Metadata/gCSI_GRvalues_v1.3.tsv",
-#     output:
-#         treatmentMetadata="metadata/treatmentMetadata.tsv",
-#         sampleMetadata="metadata/sampleMetadata.tsv",
-#     script:
-#         "scripts/preprocessMetadata.R"
-
-
-# include: "rules/rnaseq.smk"
-# include: "rules/downloadGencode.smk"
-
-# rule Salmon_ALL_quant:
-#     input:
-#         salmon_quant = lambda wc: expand(
-#             "procdata/rnaseq/salmon_v{SALMON_version}_{ref_build}.{ref_version}/{sample}/quant.sf",
-#             SALMON_version=SALMON_version,
-#             ref_build=wc.ref_build,
-#             ref_version=wc.ref_version,
-#             sample= SAMPLES,  #"586986",
-#         ),
-#         annotation_file = lambda wc: expand(
-#             "{REFERENCE_DIR}/human/{ref_build}_v{ref_version}/annotation.gtf",
-#             REFERENCE_DIR=REFERENCE_DIR,
-#             ref_build=wc.ref_build, 
-#             ref_version=wc.ref_version, 
-#         )
-#     output:
-#         RDS = "results/data/rnaseq/salmon_v{SALMON_version}_{ref_build}.{ref_version}/all_data.RDS",
-#         assay_tsv = multiext(
-#             "results/data/rnaseq/salmon_v{SALMON_version}_{ref_build}.{ref_version}/assay",
-#             "-genes.tsv.gz",
-#             "-genes_counts.tsv.gz",
-#             "-genes_length.tsv.gz",
-#             "-transcripts.tsv.gz",
-#             "-transcripts_counts.tsv.gz",
-#             "-transcripts_length.tsv.gz",
-#         ),
-#         metadata = "results/data/rnaseq/salmon_v{SALMON_version}_{ref_build}.{ref_version}/metadata.tsv",
-#     log:
-#         "logs/rnaseq/salmon_v{SALMON_version}_ALL_quant/v{SALMON_version}_{ref_build}.{ref_version}/Salmon_ALL_quant.txt"
-#     envmodules: "R/4.2.1"
-#     threads: 1
-#     script:
-#         "scripts/rnaseq/combine_salmon_quant.R"
-
-
-# rule Kallisto_ALL_quant:
-#     input:
-#         quant_files = lambda wc: expand(
-#             "procdata/rnaseq/kallisto_v{KALLISTO_version}_{ref_build}.{ref_version}/{sample}/{kallisto_files}",
-#             KALLISTO_version=wc.KALLISTO_version,
-#             ref_build=wc.ref_build,
-#             ref_version=wc.ref_version,
-#             sample= SAMPLES,  #"586986",
-#             kallisto_files=["abundance.h5","abundance.tsv","run_info.json"]
-#         ),
-#         annotation_file = lambda wc: expand(
-#             "{REFERENCE_DIR}/human/{ref_build}_v{ref_version}/annotation.gtf",
-#             REFERENCE_DIR=REFERENCE_DIR,
-#             ref_build=wc.ref_build, 
-#             ref_version=wc.ref_version, 
-#         ),
-#         sample_metadata = "metadata/rnaseq/E-MTAB-2706.sdrf.txt"
-#     output:
-#         rse_list = "results/data/rnaseq/kallisto_v{KALLISTO_version}_{ref_build}.{ref_version}/rse_list.RData",
-#         # assay_tsv = multiext(
-#         #     "results/data/rnaseq/kallisto_v{KALLISTO_version}_{ref_build}.{ref_version}/assay",
-#         #     "-genes.tsv.gz",
-#         #     "-genes_counts.tsv.gz",
-#         #     "-genes_length.tsv.gz",
-#         #     "-transcripts.tsv.gz",
-#         #     "-transcripts_counts.tsv.gz",
-#         #     "-transcripts_length.tsv.gz",
-#         # ),
-#         # metadata = "results/data/rnaseq/kallisto_v{KALLISTO_version}_{ref_build}.{ref_version}/metadata.tsv",
-#     log:
-#         "logs/rnaseq/kallisto_v{KALLISTO_version}_ALL_quant/v{KALLISTO_version}_{ref_build}.{ref_version}/Kallist_ALL_quant.txt"
-#     envmodules: "R/4.2.1"
-#     threads: 1
-#     script:
-#         "scripts/rnaseq/combine_abundances.R"
