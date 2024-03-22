@@ -6,4 +6,5 @@ references/*
 .snakemake/*
 sandbox/
 logs/
-.RData
+*.RData
+resources
