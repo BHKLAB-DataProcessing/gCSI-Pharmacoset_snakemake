@@ -9,6 +9,9 @@ molecularProfiles:
     metadata:
       url: "https://www.ebi.ac.uk/biostudies/files/E-MTAB-2706/E-MTAB-2706.sdrf.txt"
 
+containers:
+  annotationGx: "docker://bhklab/annotationgx-r:0.0.0.9096"
+
 
 refDir : "metadata/references"
 ref_build : "GRCh38"

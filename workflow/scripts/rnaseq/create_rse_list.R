@@ -1,3 +1,6 @@
+# NOTE: THIS SCRIPT HAS BEEN MODIFIED TO WORK ON THE HPC4HEALTH CLUSTER.
+
+
 ## ------------------- Parse Snakemake Object ------------------- ##
 # This checks if the snakemake object exists. an alternative if running as a script
 if(exists("snakemake")){
@@ -146,31 +149,3 @@ object.size(rse_list)  |> print()
 dir.create(dirname(OUTPUT$rse_list), recursive = TRUE, showWarnings = FALSE)
 save(rse_list, file = OUTPUT$rse_list, compress = "bzip2", compression_level = 9)
 
-
-# quant_files <- INPUT$quant_files[1:10]
-# names(quant_files) <- basename(dirname(quant_files))
-# rnaseq.genes<- getGenes(quant_files, tx2gene, tool)
-
-# rnaseq.transcripts <- getTranscripts(quant_files, tx2gene, tool, countsFromAbundance = "no")
-
-# # print(sprintf("Loading %s Gene Data", tool))
-# rnaseq.genes <- tximport::tximport(
-#     quant_files, 
-#     type = tool,
-#     tx2gene = tx2gene, 
-#     ignoreAfterBar = TRUE, 
-#     ignoreTxVersion = FALSE)
-    
-
-# print(sprintf("Loading %s Transcript Data", tool))
-# countsFromAbundance <- "no"
-# rnaseq.transcripts <- tximport::tximport(
-#     quant_files, 
-#     type = tool, 
-#     txOut = TRUE,
-#     countsFromAbundance = countsFromAbundance)
-
-# print("Configuring transcripts Rownames")
-# rownames(rnaseq.transcripts$counts) <- sub("\\|.*", "", rownames(rnaseq.transcripts$counts))
-# rownames(rnaseq.transcripts$abundance) <- sub("\\|.*", "", rownames(rnaseq.transcripts$abundance))
-# rownames(rnaseq.transcripts$length) <- sub("\\|.*", "", rownames(rnaseq.transcripts$length))

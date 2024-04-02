@@ -1,12 +1,3 @@
-# __default__:
-#     account: t119797uhn # your hpc account
-#     partition: all # the partition you use
-#     mail-user: jermiah.joseph@uhn.ca # your email (optional!)
-#     time: 60 # default time (minutes)
-#     nodes: 1
-#     ntasks: 1
-#     mem: 14GB # default memory
-
 jobs: 120
 cores: 320
 slurm: True
