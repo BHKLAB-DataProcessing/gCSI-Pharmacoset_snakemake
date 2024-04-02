@@ -23,6 +23,8 @@ PharmacoGx::downloadPSet(name = "gCSI_2019", saveDir = ".", verbose = TRUE, time
 
 ## So far, the following has been implemented
 
+![PSET](./resources/pset.png)
+
 ### Rulegraph
 
 ``` bash
