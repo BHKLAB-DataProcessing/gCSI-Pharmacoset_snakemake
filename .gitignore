@@ -7,4 +7,9 @@ references/*
 sandbox/
 logs/
 *.RData
-resources
+resources/*.RData*
+resources/*.zip
+resources/*.tar.gz
+
+.DS_Store
+TRASH
