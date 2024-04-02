@@ -127,6 +127,7 @@ CoreGx::assayMap(TREDataMapper) <- list(
 gCSI_tre <- CoreGx::metaConstruct(TREDataMapper)
 gCSI_tre
 
+message("Computing Curve Fits...")
 tre_fit <- gCSI_tre |> CoreGx::endoaggregate(
     {  # the entire code block is evaluated for each group in our group by
         # 1. fit a log logistic curve over the dose range
@@ -152,10 +153,10 @@ tre_fit <- gCSI_tre |> CoreGx::endoaggregate(
     by=c("treatmentid", "sampleid"),
     nthread=THREADS  # parallelize over multiple cores to speed up the computation
 )
-
+show(tre_fit)
 
 # Reading in Metrics:
-
+# message("Reading in Metrics...")
 
 # GRMetrics <- input_dt_list[["gCSI_GRmetrics_v1.3.tsv"]]
 # # names(GRMetrics)
@@ -169,7 +170,27 @@ tre_fit <- gCSI_tre |> CoreGx::endoaggregate(
 # # [19] "N_conc"                "log10_conc_step"       "Norm_CellLineName"
 # # [22] "Norm_DrugName"         "GR_05uM_fit"
 
+# published_profiles <- unique(
+#     GRMetrics[,
+#     .(
+#     gCSI.treatmentid = Norm_DrugName,
+#     gCSI.sampleid = Norm_CellLineName,
+#     mean_viability = meanviability,
+#     GR_AOC,
+#     GRmax,
+#     Emax,
+#     GRinf,
+#     GEC50,
+#     GR50)]
+# )
+# published_profiles[
+#     , sampleid := sampleMetadata[match(published_profiles$gCSI.sampleid, sampleMetadata$gCSI.Norm_CellLineName), gCSI.sampleid]
+# ]
+# published_profiles[
+#     , treatmentid := tre_treatmentMetadata[match(published_profiles$gCSI.treatmentid, tre_treatmentMetadata$gCSI.norm_treatmentid), gCSI.treatmentid]
+# ]
 
+# CoreGx::assay(tre_fit, "profiles_published") <- published_profiles
 # published_profiles <- unique(
 #     GRMetrics[,
 #     .(
@@ -194,3 +215,14 @@ tre_fit <- gCSI_tre |> CoreGx::endoaggregate(
 
 
 ## --------------------- Save OUTPUT ------------------- ##
+
+outputfile <- OUTPUT$tre
+dir.create(
+    path = dirname(outputfile),
+    showWarnings = FALSE,
+    recursive = TRUE
+)
+
+message("Saving TRE to: ", outputfile)
+
+saveRDS(gCSI_tre, outputfile)
