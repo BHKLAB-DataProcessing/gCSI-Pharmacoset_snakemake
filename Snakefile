@@ -22,7 +22,7 @@ sample_df = pd.read_csv("metadata/rnaseq/sample_file.csv")
 SAMPLES = list(set(sample_df.sample_alias.to_list()))
 
 include: "workflow/rules/rnaseq.smk"
-
+include: "workflow/rules/metadata.smk"
 rule build_PharmacoSet:
     input:
         treatmentMetadata = "results/data/metadata/treatmentMetadata_annotated.tsv",
