@@ -16,6 +16,8 @@ if(exists("snakemake")){
     metadata <- WILDCARDS[which(names(WILDCARDS) != "")]
     save.image(paste0("logs/",paste0(metadata, collapse="_"), "_create_se_list.RData"))
     # save.image(paste0("workflow/",WILDCARDS[[1]],"_", WILDCARDS[[2]], "_", WILDCARDS[[3]], "_", "create_se_list.RData"))
+}else{
+    load("logs/create_se_list.RData")
 }
 ####################### Generalize functions #######################
 

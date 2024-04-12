@@ -2,6 +2,9 @@ configfile: "workflow/config/config.yaml"
 
 AnnotationGxDocker = config["containers"]["annotationGx"]
 
+from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
+HTTP = HTTPRemoteProvider()
+
 rule annotate_treatmentMetadata:
     input:
         rawTreatmentMetadata = "procdata/metadata/treatmentMetadata.tsv",
@@ -14,13 +17,13 @@ rule annotate_treatmentMetadata:
     container:
         AnnotationGxDocker
     script:
-        "workflow/scripts/metadata/annotate_treatmentMetadata.R"
+        "../scripts/metadata/annotate_treatmentMetadata.R"
 
 
 rule annotate_sampleMetadata:
     input:
         rawSampleMetadata = "procdata/metadata/sampleMetadata.tsv",
-        EGA_sampleMetadata = "metadata/rnaseq/E-MTAB-2706.sdrf.txt"
+        EGA_sampleMetadata = local("metadata/rnaseq/E-MTAB-2706.sdrf.txt"),
     output:
         sampleMetadata = "results/data/metadata/sampleMetadata_annotated.tsv"
     log:
@@ -30,7 +33,7 @@ rule annotate_sampleMetadata:
     container:
         AnnotationGxDocker
     script:
-        "workflow/scripts/metadata/annotate_sampleMetadata.R"
+        "../scripts/metadata/annotate_sampleMetadata.R"
 
 rule preprocess_metadata:
     input:
@@ -43,5 +46,5 @@ rule preprocess_metadata:
     threads:
         1
     script:
-        "workflow/scripts/metadata/preprocess_metadata.R"
+        "../scripts/metadata/preprocess_metadata.R"
 

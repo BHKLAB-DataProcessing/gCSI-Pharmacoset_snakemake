@@ -21,7 +21,9 @@ sample_df = pd.read_csv("metadata/rnaseq/sample_file.csv")
 
 SAMPLES = list(set(sample_df.sample_alias.to_list()))
 
-include: "workflow/rules/rnaseq.smk"
+include: "workflow/rules/downloadData.smk"
+
+# include: "workflow/rules/rnaseq.smk" # processed on H4H compute server 
 include: "workflow/rules/metadata.smk"
 rule build_PharmacoSet:
     input:
@@ -41,7 +43,7 @@ rule build_PharmacoSet:
 
 rule create_MultiAssayExperiment:
     input:
-        rnaseq = "results/data/rnaseq/kallisto_v0.46.1_GRCh38.45/rse_list.RData",
+        rnaseq = HTTP.remote(config["molecularProfiles"]["rnaseq"]["url"]),
         sampleMetadata = "results/data/metadata/sampleMetadata_annotated.tsv"
     output:
         mae = "results/data/gCSI_MultiAssayExperiment.RDS"

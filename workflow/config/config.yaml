@@ -3,9 +3,10 @@ treatmentResponse_and_Metadata:
   TSV_files: http://research-pub.gene.com/gCSI_GRvalues2019/gCSI_GRdata_v1.3.tsv.tar.gz
 
 molecularProfiles:
-  expression:
-    description: "RNA-seq gene expression data"
-    url: "ega://EGAD000010000725"
+  rnaseq:
+    description: "RNA-seq gene expression data obtained from ega://EGAD000010000725, processed with Kallisto"
+    tool: "Kallisto 0.46.1"
+    url: "https://storage.googleapis.com/orcestra-rawdata/gCSI/rnaseq/kallisto_v0.46.1_GRCh38.45/rse_list.RData"
     metadata:
       url: "https://www.ebi.ac.uk/biostudies/files/E-MTAB-2706/E-MTAB-2706.sdrf.txt"
 

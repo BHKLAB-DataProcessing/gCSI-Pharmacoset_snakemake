@@ -12,4 +12,13 @@ resources/*.zip
 resources/*.tar.gz
 
 .DS_Store
+TRASH# pixi environments
+.pixi
+*.egg-info
+
+orcestradata
+rawdata
+
+storage.googleapis.com
+
 TRASH

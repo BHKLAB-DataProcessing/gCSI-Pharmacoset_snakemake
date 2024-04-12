@@ -142,7 +142,7 @@ final_annotated <-
     ) |> unique()
 
 final_annotated[, gCSI.sampleid := gCSI.CellLineName]
-
+final_annotated[, sampleid := gCSI.sampleid]
 final_annotated
 
 

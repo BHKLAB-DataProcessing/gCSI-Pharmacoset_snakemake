@@ -31,6 +31,9 @@ rawTreatmentMetadata
 
 #############################################################################
 # Main Script
+message("\n\nNumber of rows in the raw treatment metadata: ", nrow(rawTreatmentMetadata))
+
+message("Getting PubChem CIDs for the treatment metadata...")
 (compounds_to_cids <- 
   rawTreatmentMetadata[, 
     AnnotationGx::mapCompound2CID(
@@ -39,8 +42,10 @@ rawTreatmentMetadata
         )
       ]
 )
+stopifnot(length(unique(compounds_to_cids$cids)) >= 0)
 
 
+message("Getting PubChem properties for the treatment metadata...")
 properties <- c("Title", "MolecularFormula", "InChIKey", "MolecularWeight")
 
 cids_to_properties <- compounds_to_cids[
@@ -53,7 +58,7 @@ cids_to_properties <- compounds_to_cids[
   }
 ]
 
-
+message("Merging the CID properties with the treatment metadata...")
 gCSI_treatmentMetadata_annotated <- merge(
   cids_to_properties,
   compounds_to_cids,
@@ -61,7 +66,7 @@ gCSI_treatmentMetadata_annotated <- merge(
   by.x = "CID",
   all = TRUE
 )
-gCSI_treatmentMetadata_annotated
+str(gCSI_treatmentMetadata_annotated)
 
 
 # Renaming Columns
@@ -73,6 +78,7 @@ data.table::setnames(rawTreatmentMetadata, old = old_names, new = new_names)
 
 names(gCSI_treatmentMetadata_annotated) <- paste("pubchem", names(gCSI_treatmentMetadata_annotated), sep = ".")
 
+message("Merging the annotated treatment metadata with the raw treatment metadata...")
 gCSI_treatmentMetadata <- merge(
     rawTreatmentMetadata,
     gCSI_treatmentMetadata_annotated,
@@ -90,25 +96,35 @@ data.table::setkey(unichem_sources, Name)
 sources_of_interest <- c("chembl", "drugbank", "chebi", "phamgkb", "lincs", "clinicaltrials", "nih_ncc", "fdasrs", "pharmgkb", "rxnorm")
 sourceID <- unichem_sources[Name == "pubchem", SourceID]
 
-
+# save.image(file = "resources/annotate_treatmentMetadata.RData")
+# exit()
+load(file = "resources/annotate_treatmentMetadata.RData")
 
 message("\n\nAnnotating with unichem...")
-annotations <- lapply(gCSI_treatmentMetadata$pubchem.CID, function(x){
+
+non_na <- gCSI_treatmentMetadata[!is.na(pubchem.CID), pubchem.CID]
+
+annotations <- lapply(non_na, function(x){
   tryCatch({
+    
     result <- AnnotationGx::queryUnichemCompound(type = "sourceID", compound = x, sourceID = sourceID)
 
     subset <- result$External_Mappings[Name %in% sources_of_interest, .(compoundID, Name)]
     # make Name the column names and the values the compoundID 
     subset$cid <- x
-    dcast(subset, cid ~ Name, value.var = "compoundID", fun.aggregate = list)
-  }, error = function(e) NULL)
+    data.table::dcast(subset, cid ~ Name, value.var = "compoundID", fun.aggregate = list)
+  }, error = function(e) {
+    message("Error: ", e)
+    return(NULL)
+  })
   } 
   ) |> data.table::rbindlist(fill = T)
-show(annotations)
 
 
+annotations
+message("Converting List objects to strings...")
 
-unichem_mappings <- copy(annotations)
+unichem_mappings <- data.table::copy(annotations)
 # for each column, if its a list then make it a string with a comma separator
 for(col in names(unichem_mappings)){
   if(is.list(unichem_mappings[[col]])){
@@ -117,7 +133,6 @@ for(col in names(unichem_mappings)){
 }
 # Rename columns like drugbank to unichem.DrugBank etc, using the unichem_sources "NameLabel" column 
 names(unichem_mappings) <- paste("unichem", unichem_sources[names(unichem_mappings), gsub(" ", "_", NameLabel)], sep = ".")
-
 
 all_annotated_treatmentMetadata <- merge(
     gCSI_treatmentMetadata, 
@@ -135,16 +150,16 @@ message("\n\nAnnotating with ChEMBL using Unichem-obtained ChEMBL IDs")
 chembl_mechanisms_dt <- all_annotated_treatmentMetadata[, AnnotationGx::getChemblMechanism(unichem.ChEMBL)]
 
 chembl_cols_of_interest <- c(
-        "molecule_chembl_id",  "parent_molecule_chembl_id", "target_chembl_id", "record_id", 
-        "mechanism_of_action", "mechanism_comment", "action_type"
-    )
+  "molecule_chembl_id",  "parent_molecule_chembl_id", "target_chembl_id", "record_id", 
+  "mechanism_of_action", "mechanism_comment", "action_type"
+)
 
 all_annotated_treatmentMetadata <- merge(
-    all_annotated_treatmentMetadata, 
-    chembl_mechanisms_dt[!duplicated(molecule_chembl_id), ..chembl_cols_of_interest], 
-    by.x = "unichem.ChEMBL",
-    by.y = "molecule_chembl_id", 
-    all.x = TRUE
+  all_annotated_treatmentMetadata, 
+  chembl_mechanisms_dt[!duplicated(molecule_chembl_id), ..chembl_cols_of_interest], 
+  by.x = "unichem.ChEMBL",
+  by.y = "molecule_chembl_id", 
+  all.x = TRUE
 )
 
 data.table::setnames(

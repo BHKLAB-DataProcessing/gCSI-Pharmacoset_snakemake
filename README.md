@@ -21,6 +21,14 @@ Download old pset
 PharmacoGx::downloadPSet(name = "gCSI_2019", saveDir = ".", verbose = TRUE, timeout=3600) 
 ```
 
+## Pixi
+
+``` bash
+
+pixi run snakemake --profile workflow/profiles/labserver
+
+```
+
 ## So far, the following has been implemented
 
 ![PSET](./resources/pset.png)
