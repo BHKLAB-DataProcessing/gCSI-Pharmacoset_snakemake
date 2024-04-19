@@ -15,11 +15,11 @@ RSEM_VERSION = "1.3.0"
 STAR_VERSION = "2.7.9a"
 KALLISTO_version = "0.46.1"
 SALMON_version = "1.8.0"
-metadata = "metadata"
+# metadata = "metadata"
 
-sample_df = pd.read_csv("metadata/rnaseq/sample_file.csv")
+# sample_df = pd.read_csv("metadata/rnaseq/sample_file.csv")
 
-SAMPLES = list(set(sample_df.sample_alias.to_list()))
+# SAMPLES = list(set(sample_df.sample_alias.to_list()))
 
 include: "workflow/rules/downloadData.smk"
 include: "workflow/rules/metadata.smk"
