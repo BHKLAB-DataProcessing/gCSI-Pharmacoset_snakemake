@@ -25,6 +25,8 @@ include: "workflow/rules/downloadData.smk"
 include: "workflow/rules/metadata.smk"
 # include: "workflow/rules/rnaseq.smk" # processed on H4H compute server 
 
+conda_env = "workflow/envs/PharmacoSet.yaml"
+
 rule build_PharmacoSet:
     input:
         treatmentMetadata = "results/data/metadata/treatmentMetadata_annotated.tsv",
@@ -35,6 +37,8 @@ rule build_PharmacoSet:
         pharmacoSet = "results/data/gCSI_PharmacoSet.RDS"
     log:
         "logs/rnaseq/build_PharmacoSet.log"
+    conda:
+        conda_env
     threads:
         8
     script:
@@ -49,6 +53,8 @@ rule create_MultiAssayExperiment:
         mae = "results/data/gCSI_MultiAssayExperiment.RDS"
     log:
         "logs/rnaseq/create_MultiAssayExperiment.log"
+    conda:
+        conda_env
     threads:
         8
     script:
@@ -64,6 +70,8 @@ rule create_treatmentResponseExperiment:
         tre = "results/data/gCSI_TreatmentResponseExperiment.RDS"
     log:
         "logs/rnaseq/create_treatmentResponseExperiment.log"
+    conda:
+        conda_env
     threads:
         30
     script:

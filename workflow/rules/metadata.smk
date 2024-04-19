@@ -41,6 +41,8 @@ rule preprocess_metadata:
         rawTreatmentMetadata = "procdata/metadata/treatmentMetadata.tsv",
     log:
         "logs/metadata/preprocess_metadata_annotated.log"
+    container:
+        AnnotationGxDocker
     threads:
         1
     script:
