@@ -9,8 +9,8 @@ keep-remote: True
 use-conda: True
 use-singularity: True
 
-default-remote-provider: "GS"
-default-remote-prefix: "orcestradata/gCSI-Pharmacoset_Snakemake"
+# default-remote-provider: "GS"
+# default-remote-prefix: "orcestradata/gCSI-Pharmacoset_Snakemake"
 
 # When running on Kubernetes
 # jobs: 256       

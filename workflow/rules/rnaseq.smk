@@ -1,6 +1,4 @@
 
-configfile: "workflow/config/config.yaml"
-
 # This snakemake workflow can allow you to run either kallisto, salmon, or RSEM for quantification
 tool_dict = {
     "kallisto": "abundance.h5",
@@ -9,7 +7,6 @@ tool_dict = {
 }
 
 # In this pipeline we only use kallisto, but this rule is a generalization for using either kallisto or salmon
-
 rule create_rse_list_SALMON_KALLISTO:
     input:
         quant_files = lambda wc:
@@ -39,7 +36,6 @@ rule create_rse_list_SALMON_KALLISTO:
     threads: 1
     script:
         "scripts/rnaseq/create_rse_list.R"
-
 
 rule kallisto_quant:
     input:

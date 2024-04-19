@@ -1,9 +1,7 @@
-configfile: "workflow/config/config.yaml"
-
-AnnotationGxDocker = config["containers"]["annotationGx"]
-
 from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
 HTTP = HTTPRemoteProvider()
+
+AnnotationGxDocker = config["containers"]["annotationGx"]
 
 rule annotate_treatmentMetadata:
     input:

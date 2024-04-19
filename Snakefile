@@ -5,9 +5,9 @@ from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
 
 HTTP = HTTPRemoteProvider()
 
-configfile: "workflow/config/config.yaml"
-REFERENCE_DIR = "references"
+configfile: "config/config.yaml"
 
+REFERENCE_DIR = "references"
 
 ref_build = ["GRCh38"]
 ref_version = "45"
@@ -22,9 +22,9 @@ sample_df = pd.read_csv("metadata/rnaseq/sample_file.csv")
 SAMPLES = list(set(sample_df.sample_alias.to_list()))
 
 include: "workflow/rules/downloadData.smk"
-
-# include: "workflow/rules/rnaseq.smk" # processed on H4H compute server 
 include: "workflow/rules/metadata.smk"
+# include: "workflow/rules/rnaseq.smk" # processed on H4H compute server 
+
 rule build_PharmacoSet:
     input:
         treatmentMetadata = "results/data/metadata/treatmentMetadata_annotated.tsv",

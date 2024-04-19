@@ -1,0 +1,16 @@
+show-failed-logs: True
+keep-going: True
+keep-incomplete: True
+rerun-incomplete: True
+printshellcmds: False
+use-conda: True
+use-singularity: True
+
+default-remote-provider: "GS"
+default-remote-prefix: "orcestradata/gCSI-Pharmacoset_Snakemake"
+# default-storage-provider: "gcs"
+# default-storage-prefix: "gs://orcestradata/CCLE-Pharmacoset_Snakemake"
+# storage-gcs-keep-local: True
+
+# When running on Kubernetes
+jobs: 256
