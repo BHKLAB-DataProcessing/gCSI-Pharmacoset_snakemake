@@ -29,7 +29,8 @@ library(MultiAssayExperiment)
 
 # check if the rse_list variable exists 
 if(!exists("rse_list")){
-     load(INPUT$rnaseq) 
+    message("Loading the rse_list variable from: ", INPUT$rnaseq)
+    load(INPUT$rnaseq) 
 }
 show(rse_list)
 
@@ -121,14 +122,15 @@ metadata_list <- lapply(renamed_rse_list, function(se){
 metadata_list
 
 
-
-colData <- as.data.frame(
-    mae_colData,
-    row.names = mae_colData$gCSI.sampleid
+colData <- data.frame(
+    sampleid = mae_colData$sampleid,
+    batchid = rep(NA, nrow(mae_colData)),
+    row.names = mae_colData$sampleid
 )
 
-message(sprintf("Column data has %d rows and %d columns", nrow(colData), ncol(colData)))
 str(colData)
+message(sprintf("Column data has %d rows and %d columns", nrow(colData), ncol(colData)))
+
 
 mae <- MultiAssayExperiment::MultiAssayExperiment(
     experiments = ExpList,

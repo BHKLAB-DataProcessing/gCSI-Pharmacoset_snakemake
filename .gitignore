@@ -11,6 +11,9 @@ resources/*.RData*
 resources/*.zip
 resources/*.tar.gz
 
+*.rds
+*.RDS
+
 .DS_Store
 TRASH# pixi environments
 .pixi
